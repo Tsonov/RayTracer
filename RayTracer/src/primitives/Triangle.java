@@ -2,11 +2,13 @@ package primitives;
 
 import structures.Ray;
 import structures.Vector3;
+import structures.Color;
 
 public class Triangle implements Intersectable {
 	private Vector3[] vertices = new Vector3[3];
 	private Vector3 normal;
-
+	public Color testColor;
+	
 	public Triangle(Vector3 first, Vector3 second, Vector3 third) {
 		this(new Vector3[] { first, second, third });
 	}
@@ -20,6 +22,11 @@ public class Triangle implements Intersectable {
 		computeNormal();
 	}
 
+	public Triangle(Vector3 first, Vector3 second, Vector3 third, Color theColor) {
+		this(first, second, third);
+		this.testColor = theColor;
+	}
+
 	@Override
 	public double intersect(Ray theRay) {
 		// Get the intersection point with the triangle's plane
@@ -30,11 +37,10 @@ public class Triangle implements Intersectable {
 				.multiply(distance));
 		// A counter-clockwise based check to see whether the intersection
 		// point is within the triangle
-		boolean isInside = 
-				isToTheLeftFromLine(1, 0, intersection) &&
-				isToTheLeftFromLine(2, 1, intersection) &&
-				isToTheLeftFromLine(0, 2, intersection);
-		if(isInside) {
+		boolean isInside = isToTheLeftFromLine(1, 0, intersection)
+				&& isToTheLeftFromLine(2, 1, intersection)
+				&& isToTheLeftFromLine(0, 2, intersection);
+		if (isInside) {
 			return distance;
 		} else {
 			return Double.POSITIVE_INFINITY;
@@ -43,7 +49,8 @@ public class Triangle implements Intersectable {
 
 	private boolean isToTheLeftFromLine(int firstVertexIndex,
 			int secondVertexIndex, Vector3 intersection) {
-		Vector3 vectorParallelNormal = vertices[firstVertexIndex].subtract(vertices[secondVertexIndex]).crossProduct(
+		Vector3 vectorParallelNormal = vertices[firstVertexIndex].subtract(
+				vertices[secondVertexIndex]).crossProduct(
 				intersection.subtract(vertices[secondVertexIndex]));
 		double dot = vectorParallelNormal.dotProduct(normal);
 		boolean result = dot >= 0;

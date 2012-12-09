@@ -37,10 +37,12 @@ public class RayTracerDemo {
 		// Camera camera = new Camera(new Vector3(-4, -4, 4),
 		// new Vector3(1, 0, 0), new Vector3(0, 1, 0), 30, width, height);
 		//scene 2
-//		Camera camera = new Camera(new Vector3(-2, -2, -2),
-//				new Vector3(0, 0, 0), new Vector3(-1, -1, 2), 60, width, height);
-		Camera camera = new Camera(new Vector3(-2, -2, 2),
-				new Vector3(0, 0, 0), new Vector3(1, 1, 2), 60, width, height);
+		Camera camera = new Camera(new Vector3(-2, -2, -2),
+				new Vector3(0, 0, 0), new Vector3(-1, -1, 2), 60, width, height);
+//		Camera camera = new Camera(new Vector3(-2, -2, 2),
+//				new Vector3(0, 0, 0), new Vector3(1, 1, 2), 60, width, height);
+//		Camera camera = new Camera(new Vector3(2, 2, 2),
+//		new Vector3(0, 0, 0), new Vector3(-1, -1, 2), 60, width, height);
 		int max = width * height;
 		BufferedImage image = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
@@ -50,18 +52,24 @@ public class RayTracerDemo {
 				new Vector3(-1, +1, -1), new Vector3(-1, -1, +1),
 				new Vector3(+1, -1, +1), new Vector3(+1, +1, +1),
 				new Vector3(-1, +1, +1), };
-		tracer.addWorldObject(new Triangle(vertices[0], vertices[1], vertices[5]));
-		tracer.addWorldObject(new Triangle(vertices[0], vertices[5], vertices[4]));
-		tracer.addWorldObject(new Triangle(vertices[3], vertices[7], vertices[6]));
-		tracer.addWorldObject(new Triangle(vertices[3], vertices[6], vertices[2]));
-		tracer.addWorldObject(new Triangle(vertices[1], vertices[2], vertices[6]));
-		tracer.addWorldObject(new Triangle(vertices[1], vertices[6], vertices[5]));
-		tracer.addWorldObject(new Triangle(vertices[0], vertices[7], vertices[3]));
-		tracer.addWorldObject(new Triangle(vertices[0], vertices[4], vertices[7]));
-		tracer.addWorldObject(new Triangle(vertices[0], vertices[3], vertices[2]));
-		tracer.addWorldObject(new Triangle(vertices[0], vertices[2], vertices[1]));
-		tracer.addWorldObject(new Triangle(vertices[4], vertices[5], vertices[6]));
-		tracer.addWorldObject(new Triangle(vertices[4], vertices[7], vertices[7]));
+		Color red = new Color(255, 0, 0);
+		Color blue = new Color(0, 0, 255);
+		Color yellow = new Color(255, 255, 0);
+		Color cyan = new Color(0, 255, 255);
+		Color purple = new Color(255, 0, 255);
+		Color otherCol = new Color(120, 120, 50);
+		tracer.addWorldObject(new Triangle(vertices[0], vertices[1], vertices[5], blue));
+		tracer.addWorldObject(new Triangle(vertices[0], vertices[5], vertices[4], blue));
+		tracer.addWorldObject(new Triangle(vertices[3], vertices[7], vertices[6], red));
+		tracer.addWorldObject(new Triangle(vertices[3], vertices[6], vertices[2], red));
+		tracer.addWorldObject(new Triangle(vertices[1], vertices[2], vertices[6], yellow));
+		tracer.addWorldObject(new Triangle(vertices[1], vertices[6], vertices[5], yellow));
+		tracer.addWorldObject(new Triangle(vertices[0], vertices[7], vertices[3], cyan));
+		tracer.addWorldObject(new Triangle(vertices[0], vertices[4], vertices[7], cyan));
+		tracer.addWorldObject(new Triangle(vertices[0], vertices[3], vertices[2], purple));
+		tracer.addWorldObject(new Triangle(vertices[0], vertices[2], vertices[1], purple));
+		tracer.addWorldObject(new Triangle(vertices[4], vertices[5], vertices[6], otherCol));
+		tracer.addWorldObject(new Triangle(vertices[4], vertices[6], vertices[7], otherCol));
 		
 		tracer.addWorldObject(new Sphere(new Vector3(1, 0, 0), 0.15));
 		tracer.addWorldObject(new Sphere(new Vector3(-0.5, 1, -0.5), 0.15));
@@ -69,6 +77,21 @@ public class RayTracerDemo {
 		tracer.addWorldObject(new Sphere(new Vector3(0, 0, 1), 0.15));
 		tracer.addWorldObject(new Sphere(new Vector3(-0.5, -0.5, 1), 0.15));
 		tracer.addWorldObject(new Sphere(new Vector3(0.5, 0.5, 1), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-1, -0.5, -0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-1, -0.5, +0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-1, +0.5, +0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-1, +0.5, -0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-0.5, -1, -0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-0.5, -1, +0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(+0.5, -1, +0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(+0.5, -1, -0.5), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(0, -1, 0), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-0.5, -0.5, -1), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-0.5, 0, -1), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(-0.5, +0.5, -1), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(+0.5, -0.5, -1), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(+0.5, 0, -1), 0.15));
+		tracer.addWorldObject(new Sphere(new Vector3(+0.5, 0.5, -1), 0.15));
 		// I go pixel by pixel from the image to request a sample
 		for (int column = 0; column < width; column++) {
 			for (int row = 0; row < height; row++) {

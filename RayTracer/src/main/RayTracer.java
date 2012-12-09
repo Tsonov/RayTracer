@@ -21,14 +21,15 @@ public class RayTracer {
 			double distance = object.intersect(theRay);
 			if (distance < minDistance) {
 				minObj = object;
+				minDistance = distance;
 			}
 		}
 		if (minObj == null)
 			return new Color(0, 0, 0);
 		else {
 			if (minObj instanceof primitives.Triangle) {
-				Random rand = new Random();
-				return new Color(rand.nextInt(255), 0, 0);
+				//Random rand = new Random();
+				return ((primitives.Triangle) minObj).testColor;
 			} else
 				return new Color(0, 255, 0);
 		}
