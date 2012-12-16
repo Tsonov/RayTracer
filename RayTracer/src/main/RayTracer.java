@@ -1,14 +1,22 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Collection;
 
 import structures.Color;
 import structures.Ray;
 import primitives.Intersectable;
 
 public class RayTracer {
-	private ArrayList<Intersectable> objects = new ArrayList<>();
+	private ArrayList<Intersectable> objects;
+
+	public RayTracer() {
+		this.objects = new ArrayList<Intersectable>();
+	}
+
+	public RayTracer(Collection<Intersectable> objects) {
+		this.objects = new ArrayList<Intersectable>(objects);
+	}
 
 	public void addWorldObject(Intersectable object) {
 		this.objects.add(object);
@@ -24,14 +32,13 @@ public class RayTracer {
 				minDistance = distance;
 			}
 		}
-		if (minObj == null)
+		if (minObj == null) {
 			return new Color(0, 0, 0);
-		else {
-			if (minObj instanceof primitives.Triangle) {
-				//Random rand = new Random();
-				return ((primitives.Triangle) minObj).testColor;
-			} else
-				return new Color(0, 255, 0);
 		}
+		// else {
+		// if (minObj instanceof primitives.Triangle) {
+		// return ((primitives.Triangle) minObj).testColor;
+		// } else
+		return new Color(0, 255, 0);
 	}
 }

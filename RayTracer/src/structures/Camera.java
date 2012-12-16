@@ -1,4 +1,4 @@
-package main;
+package structures;
 
 import structures.*;
 
@@ -29,7 +29,7 @@ public final class Camera {
 		this.widthViewScreen = width;
 		this.heightViewScreen = height;
 	}
-
+	
 	public Ray getRay(ViewScreenSample sample) {
 		Vector3 direction = new Vector3();
 		double alphaCoordinate = getColumnCoordinate(sample);
