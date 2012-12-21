@@ -2,14 +2,13 @@ package structures;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import primitives.Intersectable;
+import primitives.Primitive;
 
 public class Scene {
 	private int width;
 	private int height;
 	private Camera camera;
-	private ArrayList<Intersectable> worldObjects;
+	private ArrayList<Primitive> worldObjects;
 
 	public Scene() {
 		// TODO
@@ -20,12 +19,12 @@ public class Scene {
 		return this.camera.getRay(sample);
 	}
 	
-	public Collection<Intersectable> getWorldObjects() {
+	public Collection<Primitive> getWorldObjects() {
 		return this.worldObjects;
 
 	}
 
-	public void addWorldObject(Intersectable object) {
+	public void addWorldObject(Primitive object) {
 		this.worldObjects.add(object);
 	}
 

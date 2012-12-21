@@ -9,13 +9,19 @@ public class Color {
 	private final int red;
 	private final int green;
 	private final int blue;
-	
+
 	public Color(int red, int green, int blue) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
 	}
-	
+
+	public Color(double redPercent, double greenPercent, double bluePercent) {
+		this.red = (int) (redPercent * 0xFF);
+		this.green = (int) (greenPercent * 0xFF);
+		this.blue = (int) (bluePercent * 0xFF);
+	}
+
 	public int getRGB() {
 		int result = getBlue();
 		result += getGreen() << 8;

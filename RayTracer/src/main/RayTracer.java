@@ -4,28 +4,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import structures.Color;
+import structures.Material;
 import structures.Ray;
-import primitives.Intersectable;
+import structures.Vector3;
+import primitives.Primitive;
 
 public class RayTracer {
-	private ArrayList<Intersectable> objects;
+	private ArrayList<Primitive> objects;
 
 	public RayTracer() {
-		this.objects = new ArrayList<Intersectable>();
+		this.objects = new ArrayList<Primitive>();
 	}
 
-	public RayTracer(Collection<Intersectable> objects) {
-		this.objects = new ArrayList<Intersectable>(objects);
+	public RayTracer(Collection<Primitive> objects) {
+		this.objects = new ArrayList<Primitive>(objects);
 	}
 
-	public void addWorldObject(Intersectable object) {
+	public void addWorldObject(Primitive object) {
 		this.objects.add(object);
 	}
 
 	public Color getColor(Ray theRay) {
 		double minDistance = Double.POSITIVE_INFINITY;
-		Intersectable minObj = null;
-		for (Intersectable object : objects) {
+		Primitive minObj = null;
+		for (Primitive object : objects) {
 			double distance = object.intersect(theRay);
 			if (distance < minDistance) {
 				minObj = object;
@@ -39,6 +41,11 @@ public class RayTracer {
 		// if (minObj instanceof primitives.Triangle) {
 		// return ((primitives.Triangle) minObj).testColor;
 		// } else
-		return new Color(0, 255, 0);
+		Material objectMaterial = minObj.getMaterial();
+		Vector3 colorProperties = objectMaterial.getAmbient().add(
+				objectMaterial.getEmission());
+		Color result = new Color(colorProperties.getX(),
+				colorProperties.getY(), colorProperties.getZ());
+		return result;
 	}
 }

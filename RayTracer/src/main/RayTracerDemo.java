@@ -2,12 +2,9 @@ package main;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import structures.*;
-import primitives.*;
 
 public class RayTracerDemo {
 
@@ -32,91 +29,14 @@ public class RayTracerDemo {
 		// Camera -> from point get ray
 		// RayTracer -> from ray get color (check objects)
 		// Give color to image
-		// // Output image
-		// int width = 256;
-		// int height = 192;
-
-		// Camera camera = new Camera(new Vector3(0, 0, 4), new Vector3(0, 0,
-		// 0), new Vector3(0, 1, 0), 30, width, height);
-		// Camera camera = new Camera(new Vector3(0, -3, 3), new Vector3(0, 0,
-		// 0),
-		// new Vector3(0, 1, 0), 30, width, height);
-		// Camera camera = new Camera(new Vector3(-4, 0, 1),
-		// new Vector3(0, 0, 1), new Vector3(0, 0, 1), 45, width, height);
-		// Camera camera = new Camera(new Vector3(-4, -4, 4),
-		// new Vector3(1, 0, 0), new Vector3(0, 1, 0), 30, width, height);
-		// scene 2
-		// Camera camera = new Camera(new Vector3(-2, -2, -2),
-		// // new Vector3(0, 0, 0), new Vector3(-1, -1, 2), 60, width, height);
-		// Camera camera = new Camera(new Vector3(-2, -2, 2),
-		// new Vector3(0, 0, 0), new Vector3(1, 1, 2), 60, width, height);
-		// Camera camera = new Camera(new Vector3(2, 2, 2),
-		// // new Vector3(0, 0, 0), new Vector3(-1, -1, 2), 60, width, height);
-		// int max = width * height;
-		// RayTracer tracer = new RayTracer();
-		// Vector3[] vertices = new Vector3[] { new Vector3(-1, -1, -1),
-		// new Vector3(+1, -1, -1), new Vector3(+1, +1, -1),
-		// new Vector3(-1, +1, -1), new Vector3(-1, -1, +1),
-		// new Vector3(+1, -1, +1), new Vector3(+1, +1, +1),
-		// new Vector3(-1, +1, +1), };
-		// Color red = new Color(255, 0, 0);
-		// Color blue = new Color(0, 0, 255);
-		// Color yellow = new Color(255, 255, 0);
-		// Color cyan = new Color(0, 255, 255);
-		// Color purple = new Color(255, 0, 255);
-		// Color otherCol = new Color(120, 120, 50);
-		// tracer.addWorldObject(new Triangle(vertices[0], vertices[1],
-		// vertices[5], blue));
-		// tracer.addWorldObject(new Triangle(vertices[0], vertices[5],
-		// vertices[4], blue));
-		// tracer.addWorldObject(new Triangle(vertices[3], vertices[7],
-		// vertices[6], red));
-		// tracer.addWorldObject(new Triangle(vertices[3], vertices[6],
-		// vertices[2], red));
-		// tracer.addWorldObject(new Triangle(vertices[1], vertices[2],
-		// vertices[6], yellow));
-		// tracer.addWorldObject(new Triangle(vertices[1], vertices[6],
-		// vertices[5], yellow));
-		// tracer.addWorldObject(new Triangle(vertices[0], vertices[7],
-		// vertices[3], cyan));
-		// tracer.addWorldObject(new Triangle(vertices[0], vertices[4],
-		// vertices[7], cyan));
-		// tracer.addWorldObject(new Triangle(vertices[0], vertices[3],
-		// vertices[2], purple));
-		// tracer.addWorldObject(new Triangle(vertices[0], vertices[2],
-		// vertices[1], purple));
-		// tracer.addWorldObject(new Triangle(vertices[4], vertices[5],
-		// vertices[6], otherCol));
-		// tracer.addWorldObject(new Triangle(vertices[4], vertices[6],
-		// vertices[7], otherCol));
-		//
-		// tracer.addWorldObject(new Sphere(new Vector3(1, 0, 0), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-0.5, 1, -0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(0.5, 1, 0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(0, 0, 1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-0.5, -0.5, 1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(0.5, 0.5, 1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-1, -0.5, -0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-1, -0.5, +0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-1, +0.5, +0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-1, +0.5, -0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-0.5, -1, -0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-0.5, -1, +0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(+0.5, -1, +0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(+0.5, -1, -0.5), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(0, -1, 0), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-0.5, -0.5, -1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-0.5, 0, -1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(-0.5, +0.5, -1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(+0.5, -0.5, -1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(+0.5, 0, -1), 0.15));
-		// tracer.addWorldObject(new Sphere(new Vector3(+0.5, 0.5, -1), 0.15));
+		// Output image
 		// I go pixel by pixel from the image to request a sample
 
 		SceneFileReader reader = new SceneFileReader(
 				"D:\\University and Study\\Online\\edX\\Computer graphics\\"
-						+ "Homework 3\\test scenes\\testscenes\\scene1.test");
+						+ "Homework 3\\test scenes\\testscenes\\scene3.test");
 		Scene scene = reader.getSceneInfo();
+		reader.close();
 		int width = scene.getWidth();
 		int height = scene.getHeight();
 		int max = width * height;
@@ -129,9 +49,10 @@ public class RayTracerDemo {
 				Ray ray = scene.getRay(screenPoint);
 				Color theColor = tracer.getColor(ray);
 				image.setRGB(column, row, theColor.getRGB());
-				System.out.println((column + 1) * (row + 1) * 100
-						/ (double) max);
 			}
+			double percent = (column + 1) * height * 100
+					/ (double)max;
+			System.out.println(String.format("%.2f", percent));
 		}
 		printImage(image);
 	}
@@ -139,7 +60,7 @@ public class RayTracerDemo {
 	private static void printImage(BufferedImage image) {
 		// Graphics2D drawer = image.createGraphics();
 		try {
-			ImageIO.write(image, "png", new File("testscene.png"));
+			ImageIO.write(image, "png", new File("scene3.png"));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
