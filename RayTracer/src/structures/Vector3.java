@@ -16,6 +16,10 @@ public class Vector3 {
 		setZ(z);
 	}
 
+	public Vector3(Vector3 another) {
+		this(another.getX(), another.getY(), another.getZ());
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (this == other)
@@ -36,7 +40,7 @@ public class Vector3 {
 		result.setZ(this.z + other.z);
 		return result;
 	}
-	
+
 	public Vector3 subtract(Vector3 other) {
 		Vector3 result = new Vector3();
 		result.setX(this.x - other.x);
@@ -65,14 +69,18 @@ public class Vector3 {
 		result.setZ(z * scalar);
 		return result;
 	}
-	
+
 	public void normalize() {
 		if (this.equals(ZERO_VEC))
 			return; // zero vector is already normalized, avoid division by zero
-		double length = Math.sqrt(x * x + y * y + z * z);
+		double length = getLength();
 		this.setX(x / length);
 		this.setY(y / length);
 		this.setZ(z / length);
+	}
+
+	public double getLength() {
+		return Math.sqrt(x * x + y * y + z * z);
 	}
 
 	public double getX() {

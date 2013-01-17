@@ -5,12 +5,14 @@ public class Material {
 	private Vector3 ambient;
 	private Vector3 specular;
 	private Vector3 emission;
+	private double shininess;
 
 	public Material() {
 		this.setDiffuse(new Vector3(0, 0, 0));
 		this.setAmbient(new Vector3(0, 0, 0));
 		this.setSpecular(new Vector3(0, 0, 0));
 		this.setEmission(new Vector3(0, 0, 0));
+		this.shininess = 0;
 	}
 	
 	public Material(Material another) {
@@ -18,6 +20,15 @@ public class Material {
 		this.setAmbient(another.ambient);
 		this.setSpecular(another.specular);
 		this.setEmission(another.emission);
+		this.setShininess(another.shininess);
+	}
+	
+	public double getShininess() {
+		return shininess;
+	}
+
+	public void setShininess(double shininess) {
+		this.shininess = shininess;
 	}
 	
 	public Vector3 getDiffuse() {

@@ -3,5 +3,5 @@ package primitives;
 import structures.*;
 
 public interface Intersectable {
-	public double intersect(Ray theRay);
+	public IntersectionInfo intersect(Ray theRay);
 }

@@ -1,5 +1,6 @@
 package primitives;
 
+import structures.IntersectionInfo;
 import structures.Ray;
 import Jama.Matrix;
 import structures.Vector3;
@@ -19,45 +20,42 @@ public class Triangle extends Primitive {
 			throw new IllegalArgumentException(
 					"A triangle needs exactly three vertices to be defined!");
 		}
-		this.vertices = vertices;
+		for (int i = 0; i < vertices.length; i++) {
+			this.vertices[i] = transformVector(vertices[i], 1, this.transformationToWorldCoordiantes);
+		}
+		//this.vertices = vertices;
 		computeNormal();
 	}
 
 	@Override
-	public double intersect(Ray theRay) {
-		Vector3 transfOrigin = transformVector(theRay.origin, 1);
-		Vector3 transfDirection = transformVector(theRay.direction, 0);
-		Ray transformedRay = new Ray(transfOrigin, transfDirection);
-		return intersectTrans(transformedRay);
+	public IntersectionInfo intersect(Ray theRay) {
+//		Matrix rayTransformation = this.transformationToWorldCoordiantes.inverse();
+//		Vector3 transfOrigin = transformVector(theRay.origin, 1, rayTransformation);
+//		Vector3 transfDirection = transformVector(theRay.direction, 0, rayTransformation);
+//		Ray transformedRay = new Ray(transfOrigin, transfDirection);
+		return intersectTrans(theRay);
 	}
 
-	private Vector3 transformVector(Vector3 vector, double homogeneousCoord) {
-		double[][] homogenOriginArray = { { vector.getX() },
-				{ vector.getY() }, { vector.getZ() },
-				{ homogeneousCoord } };
-		Matrix homogenOriginMatrix = new Matrix(homogenOriginArray);
-		homogenOriginMatrix = this.rayTransformation.times(homogenOriginMatrix);
-		Vector3 transformedVector = new Vector3(homogenOriginMatrix.get(0, 0),
-				homogenOriginMatrix.get(1, 0), homogenOriginMatrix.get(2, 0));
-		return transformedVector;
-	}
-
-	private double intersectTrans(Ray transformedRay) {
+	private IntersectionInfo intersectTrans(Ray theRay) {
 		// Get the intersection point with the triangle's plane
-		double distance = -transformedRay.origin.subtract(vertices[0])
+		double distance = -theRay.origin.subtract(vertices[0])
 				.dotProduct(normal)
-				/ transformedRay.direction.dotProduct(normal);
-		Vector3 intersection = transformedRay.origin
-				.add(transformedRay.direction.multiply(distance));
+				/ theRay.direction.dotProduct(normal);
+		Vector3 intersectionPoint = theRay.origin
+				.add(theRay.direction.multiply(distance));
 		// A counter-clockwise based check to see whether the intersection
 		// point is within the triangle
-		boolean isInside = isToTheLeftFromLine(1, 0, intersection)
-				&& isToTheLeftFromLine(2, 1, intersection)
-				&& isToTheLeftFromLine(0, 2, intersection);
+		boolean isInside = isToTheLeftFromLine(1, 0, intersectionPoint)
+				&& isToTheLeftFromLine(2, 1, intersectionPoint)
+				&& isToTheLeftFromLine(0, 2, intersectionPoint);
 		if (isInside) {
-			return distance;
+			Vector3 transformedIntersectionPoint = new Vector3(intersectionPoint);
+			Vector3 transformedNormal = new Vector3(this.normal);
+			//this.transformIntersectionObjectsToWorld(transformedIntersectionPoint, transformedNormal);
+			return new IntersectionInfo(distance, intersectionPoint, this.normal);
+			//return new IntersectionInfo(distance, transformedIntersectionPoint, transformedNormal);
 		} else {
-			return Double.POSITIVE_INFINITY;
+			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}
 	}
 

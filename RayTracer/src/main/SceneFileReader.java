@@ -6,6 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.Stack;
+
+import lights.AbstractLight;
+import structures.Color;
 import structures.Material;
 import structures.Scene;
 import structures.Transformations;
@@ -77,26 +80,36 @@ public class SceneFileReader implements Closeable {
 
 		case "directional":
 			// TODO
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
+			double dirLightX = scanner.nextDouble();
+			double dirLightY = scanner.nextDouble();
+			double dirLightZ = scanner.nextDouble();
+			red = scanner.nextDouble();
+			green = scanner.nextDouble();
+			blue = scanner.nextDouble();
+			AbstractLight dirLight = new AbstractLight(new Vector3(dirLightX,
+					dirLightY, dirLightZ), new Color(red, green, blue));
+			theScene.addNewLightSource(dirLight);
 			break;
 
 		case "point":
 			// TODO
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
-			scanner.nextDouble();
+			double pointLightX = scanner.nextDouble();
+			double pointLightY = scanner.nextDouble();
+			double pointLightZ = scanner.nextDouble();
+			red = scanner.nextDouble();
+			green = scanner.nextDouble();
+			blue = scanner.nextDouble();
+			AbstractLight pointLight = new AbstractLight(new Vector3(
+					pointLightX, pointLightY, pointLightZ), new Color(red,
+					green, blue));
+			theScene.addNewLightSource(pointLight);
 			break;
 
 		case "attenuation":
-			// TODO
+			double constant = scanner.nextDouble();
+			double linear = scanner.nextDouble();
+			double quadratic = scanner.nextDouble();
+			theScene.setAttenuation(new Vector3(constant, linear, quadratic));
 			break;
 
 		case "pushTransform":
@@ -159,7 +172,8 @@ public class SceneFileReader implements Closeable {
 			break;
 
 		case "shininess":
-			// TODO
+			double shininess = scanner.nextDouble();
+			this.currentMaterialProperties.setShininess(shininess);
 			break;
 
 		case "emission":
@@ -173,6 +187,12 @@ public class SceneFileReader implements Closeable {
 		case "sphere":
 			handleSphere(theScene);
 			break;
+
+		case "output":
+			String sceneName = scanner.next();
+			theScene.setSceneName(sceneName);
+			break;
+
 		default:
 			throw new InvalidSceneFileException("Invalid command in file");
 		}
