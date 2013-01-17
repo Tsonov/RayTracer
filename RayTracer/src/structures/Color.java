@@ -23,10 +23,16 @@ public class Color {
 	public Color(double redPercent, double greenPercent, double bluePercent) {
 		if (redPercent > 1)
 			redPercent = 1;
+		if (redPercent < 0)
+			redPercent = 0;
 		if (greenPercent > 1)
 			greenPercent = 1;
+		if (greenPercent < 0)
+			greenPercent = 0;
 		if (bluePercent > 1)
 			bluePercent = 1;
+		if (bluePercent < 0)
+			bluePercent = 0;
 		this.red = (int) (redPercent * 0xFF);
 		this.green = (int) (greenPercent * 0xFF);
 		this.blue = (int) (bluePercent * 0xFF);

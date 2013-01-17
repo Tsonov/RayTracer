@@ -49,11 +49,7 @@ public class Triangle extends Primitive {
 				&& isToTheLeftFromLine(2, 1, intersectionPoint)
 				&& isToTheLeftFromLine(0, 2, intersectionPoint);
 		if (isInside) {
-			Vector3 transformedIntersectionPoint = new Vector3(intersectionPoint);
-			Vector3 transformedNormal = new Vector3(this.normal);
-			//this.transformIntersectionObjectsToWorld(transformedIntersectionPoint, transformedNormal);
 			return new IntersectionInfo(distance, intersectionPoint, this.normal);
-			//return new IntersectionInfo(distance, transformedIntersectionPoint, transformedNormal);
 		} else {
 			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}

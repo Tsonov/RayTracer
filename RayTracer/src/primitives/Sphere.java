@@ -61,7 +61,8 @@ public class Sphere extends Primitive {
 		
 		Vector3 intersectionPoint = theRay.origin.add(theRay.direction
 				.multiply(resultDistance));
-		//intersectionPoint = transformVector(intersectionPoint, 1, this.transformationToWorldCoordiantes);
+		intersectionPoint = transformVector(intersectionPoint, 1, this.transformationToWorldCoordiantes);
+		intersectionPoint = transformVector(intersectionPoint, 1, this.transformationToWorldCoordiantes.inverse());
 		Vector3 normal = intersectionPoint.subtract(this.center);
 		normal.normalize();
 		Matrix transformationForNormal = this.transformationToWorldCoordiantes.inverse().transpose();
