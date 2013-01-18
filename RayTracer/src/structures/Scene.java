@@ -3,7 +3,7 @@ package structures;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import lights.AbstractLight;
+import lights.Light;
 import primitives.Primitive;
 
 public class Scene {
@@ -13,7 +13,7 @@ public class Scene {
 	private ArrayList<Primitive> worldObjects;
 	private String sceneName;
 	private Vector3 attenuation;
-	private ArrayList<AbstractLight> lights;
+	private ArrayList<Light> lights;
 
 	public Scene() {
 		// TODO
@@ -35,7 +35,7 @@ public class Scene {
 
 	}
 	
-	public Collection<AbstractLight> getLights() {
+	public Collection<Light> getLights() {
 		return this.lights;
 	}
 
@@ -43,7 +43,7 @@ public class Scene {
 		this.worldObjects.add(object);
 	}
 
-	public void addNewLightSource(AbstractLight light) {
+	public void addNewLightSource(Light light) {
 		this.lights.add(light);
 	}
 

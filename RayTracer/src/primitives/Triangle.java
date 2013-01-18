@@ -21,35 +21,40 @@ public class Triangle extends Primitive {
 					"A triangle needs exactly three vertices to be defined!");
 		}
 		for (int i = 0; i < vertices.length; i++) {
-			this.vertices[i] = transformVector(vertices[i], 1, this.transformationToWorldCoordiantes);
+			this.vertices[i] = transformVector(vertices[i], 1,
+					this.transformationToWorldCoordiantes);
 		}
-		//this.vertices = vertices;
+		// this.vertices = vertices;
 		computeNormal();
 	}
 
 	@Override
 	public IntersectionInfo intersect(Ray theRay) {
-//		Matrix rayTransformation = this.transformationToWorldCoordiantes.inverse();
-//		Vector3 transfOrigin = transformVector(theRay.origin, 1, rayTransformation);
-//		Vector3 transfDirection = transformVector(theRay.direction, 0, rayTransformation);
-//		Ray transformedRay = new Ray(transfOrigin, transfDirection);
+		// Matrix rayTransformation =
+		// this.transformationToWorldCoordiantes.inverse();
+		// Vector3 transfOrigin = transformVector(theRay.origin, 1,
+		// rayTransformation);
+		// Vector3 transfDirection = transformVector(theRay.direction, 0,
+		// rayTransformation);
+		// Ray transformedRay = new Ray(transfOrigin, transfDirection);
 		return intersectTrans(theRay);
 	}
 
 	private IntersectionInfo intersectTrans(Ray theRay) {
 		// Get the intersection point with the triangle's plane
-		double distance = -theRay.origin.subtract(vertices[0])
-				.dotProduct(normal)
+		double distance = -theRay.origin.subtract(vertices[0]).dotProduct(
+				normal)
 				/ theRay.direction.dotProduct(normal);
-		Vector3 intersectionPoint = theRay.origin
-				.add(theRay.direction.multiply(distance));
+		Vector3 intersectionPoint = theRay.origin.add(theRay.direction
+				.multiply(distance));
 		// A counter-clockwise based check to see whether the intersection
 		// point is within the triangle
 		boolean isInside = isToTheLeftFromLine(1, 0, intersectionPoint)
 				&& isToTheLeftFromLine(2, 1, intersectionPoint)
 				&& isToTheLeftFromLine(0, 2, intersectionPoint);
 		if (isInside) {
-			return new IntersectionInfo(distance, intersectionPoint, this.normal);
+			return new IntersectionInfo(distance, intersectionPoint,
+					this.normal);
 		} else {
 			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}

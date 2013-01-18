@@ -21,15 +21,15 @@ public class Color {
 	// }
 
 	public Color(double redPercent, double greenPercent, double bluePercent) {
-		if (redPercent > 1)
+		if (Double.compare(redPercent, 1) > 0)
 			redPercent = 1;
 		if (redPercent < 0)
 			redPercent = 0;
-		if (greenPercent > 1)
+		if (Double.compare(greenPercent, 1) > 0)
 			greenPercent = 1;
 		if (greenPercent < 0)
 			greenPercent = 0;
-		if (bluePercent > 1)
+		if (Double.compare(bluePercent, 1) > 0)
 			bluePercent = 1;
 		if (bluePercent < 0)
 			bluePercent = 0;
@@ -44,18 +44,6 @@ public class Color {
 		result += getRed() << 16;
 		return result;
 	}
-
-	// private void setRed() {
-	//
-	// }
-	//
-	// private void setGreen() {
-	//
-	// }
-	//
-	// private void setBlue() {
-	//
-	// }
 
 	public int getRed() {
 		return red;

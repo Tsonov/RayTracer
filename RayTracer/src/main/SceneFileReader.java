@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.Stack;
 
-import lights.AbstractLight;
+import lights.Light;
 import structures.Color;
 import structures.Material;
 import structures.Scene;
@@ -79,29 +79,26 @@ public class SceneFileReader implements Closeable {
 			break;
 
 		case "directional":
-			// TODO
 			double dirLightX = scanner.nextDouble();
 			double dirLightY = scanner.nextDouble();
 			double dirLightZ = scanner.nextDouble();
 			red = scanner.nextDouble();
 			green = scanner.nextDouble();
 			blue = scanner.nextDouble();
-			AbstractLight dirLight = new AbstractLight(new Vector3(dirLightX,
-					dirLightY, dirLightZ), new Color(red, green, blue));
+			Light dirLight = new Light(new Vector3(dirLightX, dirLightY,
+					dirLightZ), new Color(red, green, blue), true);
 			theScene.addNewLightSource(dirLight);
 			break;
 
 		case "point":
-			// TODO
 			double pointLightX = scanner.nextDouble();
 			double pointLightY = scanner.nextDouble();
 			double pointLightZ = scanner.nextDouble();
 			red = scanner.nextDouble();
 			green = scanner.nextDouble();
 			blue = scanner.nextDouble();
-			AbstractLight pointLight = new AbstractLight(new Vector3(
-					pointLightX, pointLightY, pointLightZ), new Color(red,
-					green, blue));
+			Light pointLight = new Light(new Vector3(pointLightX, pointLightY,
+					pointLightZ), new Color(red, green, blue), false);
 			theScene.addNewLightSource(pointLight);
 			break;
 

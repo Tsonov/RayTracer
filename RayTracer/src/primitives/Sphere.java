@@ -15,13 +15,15 @@ public class Sphere extends Primitive {
 
 	@Override
 	public IntersectionInfo intersect(Ray theRay) {
-		Matrix inverseTransformation = this.transformationToWorldCoordiantes.inverse();
-		Vector3 transfOrigin = transformVector(theRay.origin, 1, inverseTransformation);
-		Vector3 transfDirection = transformVector(theRay.direction, 0, inverseTransformation);
+		Matrix inverseTransformation = this.transformationToWorldCoordiantes
+				.inverse();
+		Vector3 transfOrigin = transformVector(theRay.origin, 1,
+				inverseTransformation);
+		Vector3 transfDirection = transformVector(theRay.direction, 0,
+				inverseTransformation);
 		Ray transformedRay = new Ray(transfOrigin, transfDirection);
 		return intersectTrans(transformedRay);
 	}
-
 
 	public IntersectionInfo intersectTrans(Ray theRay) {
 		Vector3 vecToCenter = theRay.origin.subtract(this.center);
@@ -54,21 +56,24 @@ public class Sphere extends Primitive {
 				}
 			}
 		}
-		//If the distance is still Infinity, we don't have an intersection
+		// If the distance is still Infinity, we don't have an intersection
 		if (Double.compare(resultDistance, Double.POSITIVE_INFINITY) == 0) {
 			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}
-		
+
 		Vector3 intersectionPoint = theRay.origin.add(theRay.direction
 				.multiply(resultDistance));
-		intersectionPoint = transformVector(intersectionPoint, 1, this.transformationToWorldCoordiantes);
-		intersectionPoint = transformVector(intersectionPoint, 1, this.transformationToWorldCoordiantes.inverse());
 		Vector3 normal = intersectionPoint.subtract(this.center);
 		normal.normalize();
-		Matrix transformationForNormal = this.transformationToWorldCoordiantes.inverse().transpose();
+		
+
+		intersectionPoint = transformVector(intersectionPoint, 1,
+				this.transformationToWorldCoordiantes);
+		Matrix transformationForNormal = this.transformationToWorldCoordiantes
+				.inverse().transpose();
 		normal = transformVector(normal, 0, transformationForNormal);
 		normal.normalize();
-		//this.transformIntersectionObjectsToWorld(intersectionPoint, normal);
+		
 		return new IntersectionInfo(resultDistance, intersectionPoint, normal);
 	}
 }
