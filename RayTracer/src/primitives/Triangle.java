@@ -20,11 +20,11 @@ public class Triangle extends Primitive {
 			throw new IllegalArgumentException(
 					"A triangle needs exactly three vertices to be defined!");
 		}
+		// this.vertices = vertices;
 		for (int i = 0; i < vertices.length; i++) {
 			this.vertices[i] = transformVector(vertices[i], 1,
 					this.transformationToWorldCoordiantes);
 		}
-		// this.vertices = vertices;
 		computeNormal();
 	}
 
@@ -42,7 +42,7 @@ public class Triangle extends Primitive {
 		double distance = -theRay.origin.subtract(vertices[0]).dotProduct(
 				normal)
 				/ theRay.direction.dotProduct(normal);
-		if(distance < 0) {
+		if (distance < 0) {
 			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}
 		Vector3 intersectionPoint = theRay.origin.add(theRay.direction
@@ -54,7 +54,7 @@ public class Triangle extends Primitive {
 				&& isToTheLeftFromLine(0, 2, intersectionPoint);
 		if (isInside) {
 			return new IntersectionInfo(distance, intersectionPoint,
-					this.normal);
+					new Vector3(this.normal));
 		} else {
 			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}
@@ -105,7 +105,8 @@ public class Triangle extends Primitive {
 		Vector3 first = this.vertices[1].subtract(this.vertices[0]);
 		Vector3 second = this.vertices[2].subtract(this.vertices[0]);
 		this.normal = first.crossProduct(second);
-		this.normal = transformVector(normal, 0, this.transformationToWorldCoordiantes.inverse().transpose());
+		// this.normal = transformVector(normal, 0,
+		// this.transformationToWorldCoordiantes.inverse().transpose());
 		this.normal.normalize();
 	}
 }

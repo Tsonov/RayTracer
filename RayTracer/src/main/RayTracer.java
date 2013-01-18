@@ -90,6 +90,7 @@ public class RayTracer {
 		// // Color reflection = this.getColor(reflectedRay, depth + 1);
 		// // return reflection;
 		// }
+
 		Material objectMaterial = minObj.getMaterial();
 		// Add the ambient and emission terms immediately as they are not
 		// affected by light sources
@@ -122,10 +123,10 @@ public class RayTracer {
 		}
 		Color result = new Color(colorProperties.getX(),
 				colorProperties.getY(), colorProperties.getZ());
-		//Debug
-//		result = new Color(minIntersectionInfo.Normal.getX(),
-//				minIntersectionInfo.Normal.getY(),
-//				minIntersectionInfo.Normal.getZ());
+		// Debug
+		// result = new Color(minIntersectionInfo.Normal.getX(),
+		// minIntersectionInfo.Normal.getY(),
+		// minIntersectionInfo.Normal.getZ());
 		return result;
 	}
 
@@ -145,11 +146,15 @@ public class RayTracer {
 			Material objectMaterial, Light light, Vector3 rayDir) {
 		Color lightIntensity = light.getColor();
 		Vector3 lightIntensityVector = new Vector3(lightIntensity);
+		Vector3 resultLightTerm = new Vector3(0, 0, 0);
 
+		Vector3 lightDirection = light.getCoordinates().subtract(
+				minIntersectionInfo.IntersectionPoint);
+		lightDirection.normalize();
+		
 		// If the light is a point, we have to add an attenuation factor
 		if (light.IsDirectional == false) {
-			double distance = minIntersectionInfo.IntersectionPoint.subtract(
-					light.getCoordinates()).getLength();
+			double distance = lightDirection.getLength();
 			double attenuationFactor = constAttenuation + linearAttenuation
 					* distance + quadraticAttenuation * distance * distance;
 			lightIntensityVector = lightIntensityVector
@@ -158,30 +163,29 @@ public class RayTracer {
 
 		// Calculate the diffuse term based on the location of the object
 		// and the light
-		Vector3 lightDirection = light.getCoordinates().subtract(
-				minIntersectionInfo.IntersectionPoint);
-		// debugX = lightDirection.getX();
-		// debugY = lightDirection.getY();
-		// debugZ = lightDirection.getZ();
-		lightDirection.normalize();
+		// Vector3 lightDirection = light.getCoordinates().subtract(
+		// minIntersectionInfo.IntersectionPoint);
+		// lightDirection.normalize();
 		double lightDiffuseFactor = Math.max(
 				minIntersectionInfo.Normal.dotProduct(lightDirection), 0);
 		Vector3 diffusionTerm = objectMaterial.getDiffuse().multiply(
 				lightDiffuseFactor);
+		resultLightTerm = resultLightTerm.add(diffusionTerm);
 
 		// Calculate the specular term based on the location of the object and
 		// the reflection properties
-		// But only if the light is visible ( i.e. the diffuse factor is not 0 )
 		Vector3 halfAngle = lightDirection.subtract(rayDir);
 		halfAngle.normalize();
 		double specularFactor = Math.max(
 				halfAngle.dotProduct(minIntersectionInfo.Normal), 0);
-		specularFactor = Math
-				.pow(specularFactor, objectMaterial.getShininess());
-		Vector3 specularTerm = objectMaterial.getSpecular().multiply(
-				specularFactor);
-
-		Vector3 resultLightTerm = diffusionTerm.add(specularTerm)
+		if (Double.compare(specularFactor, 0) > 0) {
+			specularFactor = Math.pow(specularFactor,
+					objectMaterial.getShininess());
+			Vector3 specularTerm = objectMaterial.getSpecular().multiply(
+					specularFactor);
+			resultLightTerm = resultLightTerm.add(specularTerm);
+		}
+		resultLightTerm = resultLightTerm
 				.multiplyByVector(lightIntensityVector);
 		return resultLightTerm;
 	}
