@@ -11,6 +11,7 @@ public class Sphere extends Primitive {
 		super(transformation);
 		this.radius = radius;
 		this.center = theCenter;
+		this.boundingBox = generateBoundingBox();
 	}
 
 	@Override
@@ -65,7 +66,6 @@ public class Sphere extends Primitive {
 				.multiply(resultDistance));
 		Vector3 normal = intersectionPoint.subtract(this.center);
 		normal.normalize();
-		
 
 		intersectionPoint = transformVector(intersectionPoint, 1,
 				this.transformationToWorldCoordiantes);
@@ -73,7 +73,49 @@ public class Sphere extends Primitive {
 				.inverse().transpose();
 		normal = transformVector(normal, 0, transformationForNormal);
 		normal.normalize();
-		
+
 		return new IntersectionInfo(resultDistance, intersectionPoint, normal);
+	}
+
+	protected Box generateBoundingBox() {
+		Vector3[] boundings = new Vector3[8];
+		boundings[0] = transformVector(
+				center.add(new Vector3(radius, radius, radius)), 1,
+				transformationToWorldCoordiantes);
+		boundings[1] = transformVector(
+				center.add(new Vector3(radius, radius, -radius)), 1,
+				transformationToWorldCoordiantes);
+		boundings[2] = transformVector(
+				center.add(new Vector3(radius, -radius, radius)), 1,
+				transformationToWorldCoordiantes);
+		boundings[3] = transformVector(
+				center.add(new Vector3(radius, -radius, -radius)), 1,
+				transformationToWorldCoordiantes);
+		boundings[4] = transformVector(
+				center.add(new Vector3(-radius, radius, radius)), 1,
+				transformationToWorldCoordiantes);
+		boundings[5] = transformVector(
+				center.add(new Vector3(-radius, radius, -radius)), 1,
+				transformationToWorldCoordiantes);
+		boundings[6] = transformVector(
+				center.add(new Vector3(-radius, -radius, radius)), 1,
+				transformationToWorldCoordiantes);
+		boundings[7] = transformVector(
+				center.add(new Vector3(-radius, -radius, -radius)), 1,
+				transformationToWorldCoordiantes);
+
+		Vector3 min = boundings[0];
+		Vector3 max = boundings[1];
+		for (int axis = 0; axis < 3; axis++) {
+			for (int boundingsIndex = 0; boundingsIndex < 8; boundingsIndex++) {
+				double minVal = Math.min(min.getCoordinate(axis),
+						boundings[boundingsIndex].getCoordinate(axis));
+				double maxVal = Math.max(max.getCoordinate(axis),
+						boundings[boundingsIndex].getCoordinate(axis));
+				min.setCoordinate(axis, minVal);
+				max.setCoordinate(axis, maxVal);
+			}
+		}
+		return null;
 	}
 }

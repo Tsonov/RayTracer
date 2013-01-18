@@ -97,6 +97,35 @@ public class Vector3 {
 		return this.equals(ZERO_VEC);
 	}
 
+	public double getCoordinate(int index) {
+		switch (index) {
+		case 0:
+			return this.getX();
+		case 1:
+			return this.getY();
+		case 2:
+			return this.getZ();
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	public void setCoordinate(int index, double value) {
+		switch (index) {
+		case 0:
+			this.setX(value);
+			break;
+		case 1:
+			this.setY(value);
+			break;
+		case 2:
+			this.setZ(value);
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+
 	public double getLength() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}

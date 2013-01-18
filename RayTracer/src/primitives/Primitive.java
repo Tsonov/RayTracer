@@ -1,17 +1,24 @@
 package primitives;
 
+import structures.Box;
 import structures.Material;
 import structures.Vector3;
 import Jama.Matrix;
 
 public abstract class Primitive implements Intersectable {
 	protected final Matrix transformationToWorldCoordiantes;
+	protected Box boundingBox;
 	private Material material;
 
 	protected Primitive(Matrix transformation) {
 		this.transformationToWorldCoordiantes = transformation;
 	}
 
+	protected Primitive(Box boundingBox) {
+		this.transformationToWorldCoordiantes = null;
+		this.boundingBox = boundingBox;
+	}
+	
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
@@ -22,6 +29,10 @@ public abstract class Primitive implements Intersectable {
 
 	public Matrix getTransformation() {
 		return this.transformationToWorldCoordiantes;
+	}
+	
+	public Box getBoundingBox() {
+		return this.boundingBox;
 	}
 
 	public static Vector3 transformVector(Vector3 vector,

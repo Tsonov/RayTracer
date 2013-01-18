@@ -1,5 +1,6 @@
 package primitives;
 
+import structures.Box;
 import structures.IntersectionInfo;
 import structures.Ray;
 import Jama.Matrix;
@@ -26,6 +27,7 @@ public class Triangle extends Primitive {
 					this.transformationToWorldCoordiantes);
 		}
 		computeNormal();
+		this.boundingBox = generateBoundingBox();
 	}
 
 	@Override
@@ -75,5 +77,21 @@ public class Triangle extends Primitive {
 		// this.normal = transformVector(normal, 0,
 		// this.transformationToWorldCoordiantes.inverse().transpose());
 		this.normal.normalize();
+	}
+
+	private Box generateBoundingBox() {
+		Vector3 min = new Vector3();
+		Vector3 max = new Vector3();
+		for (int axis = 0; axis < 3; axis++) {
+			double minValue = Math.min(
+					vertices[0].getCoordinate(axis),
+					Math.min(vertices[1].getCoordinate(axis),
+							vertices[2].getCoordinate(axis)));
+			double maxValue = Math.max(
+					vertices[0].getCoordinate(axis),
+					Math.max(vertices[1].getCoordinate(axis),
+							vertices[2].getCoordinate(axis)));
+		}
+		return new Box(min, max);
 	}
 }
