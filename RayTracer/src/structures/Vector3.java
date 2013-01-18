@@ -70,6 +70,14 @@ public class Vector3 {
 		return result;
 	}
 
+	public Vector3 multiplyByVector(Vector3 another) {
+		Vector3 result = new Vector3();
+		result.setX(x * another.x);
+		result.setY(y * another.y);
+		result.setZ(z * another.z);
+		return result;
+	}
+
 	public void normalize() {
 		if (this.equals(ZERO_VEC))
 			return; // zero vector is already normalized, avoid division by zero
@@ -79,6 +87,10 @@ public class Vector3 {
 		this.setZ(z / length);
 	}
 
+	public boolean isZero() {
+		return this.equals(ZERO_VEC);
+	}
+	
 	public double getLength() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}

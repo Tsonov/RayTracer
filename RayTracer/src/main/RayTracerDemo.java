@@ -34,7 +34,7 @@ public class RayTracerDemo {
 
 		SceneFileReader reader = new SceneFileReader(
 				"D:\\University and Study\\Online\\edX\\Computer graphics\\"
-						+ "Homework 3\\hw3-submissionscenes\\hw3-submissionscenes\\scene4-diffuse.test");
+						+ "Homework 3\\hw3-submissionscenes\\hw3-submissionscenes\\scene4-specular.test");
 		Scene scene = reader.getSceneInfo();
 		reader.close();
 		int width = scene.getWidth();
@@ -61,7 +61,7 @@ public class RayTracerDemo {
 	private static void printImage(BufferedImage image) {
 		// Graphics2D drawer = image.createGraphics();
 		try {
-			ImageIO.write(image, "png", new File("scene4-diffuse.png"));
+			ImageIO.write(image, "png", new File("Outputs\\scene4-specular.png"));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

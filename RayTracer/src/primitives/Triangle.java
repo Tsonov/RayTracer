@@ -74,5 +74,6 @@ public class Triangle extends Primitive {
 		Vector3 first = this.vertices[1].subtract(this.vertices[0]);
 		Vector3 second = this.vertices[2].subtract(this.vertices[0]);
 		this.normal = first.crossProduct(second);
+		this.normal.normalize();
 	}
 }
