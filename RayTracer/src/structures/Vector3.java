@@ -20,6 +20,12 @@ public class Vector3 {
 		this(another.getX(), another.getY(), another.getZ());
 	}
 
+	public Vector3(Color color) {
+		this(((double) color.getRed()) / 0xFF,
+				((double) color.getGreen()) / 0xFF,
+				((double) color.getBlue()) / 0xFF);
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (this == other)
@@ -90,7 +96,7 @@ public class Vector3 {
 	public boolean isZero() {
 		return this.equals(ZERO_VEC);
 	}
-	
+
 	public double getLength() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}

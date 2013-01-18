@@ -21,6 +21,11 @@ public class RayTracer {
 	private ArrayList<Primitive> objects;
 	private ArrayList<Light> lights;
 
+	// for debug
+	// private double debugX = 150;
+	// private double debugY = 200;
+	// private double debugZ = 90;
+
 	public RayTracer() {
 		this.objects = new ArrayList<Primitive>();
 		this.lights = new ArrayList<Light>();
@@ -45,9 +50,9 @@ public class RayTracer {
 	public Color getColor(Ray theRay) {
 		return this.getColor(theRay, 0);
 	}
-	
+
 	public Color getColor(Ray theRay, int depth) {
-		if(depth == MAX_DEPTH) {
+		if (depth == MAX_DEPTH) {
 			return new Color(0, 0, 0);
 		}
 		double minDistance = Double.POSITIVE_INFINITY;
@@ -66,6 +71,25 @@ public class RayTracer {
 			return new Color(0, 0, 0);
 		}
 
+		// DEBUG
+		// if (depth == 1) {
+		// return new Color(minIntersectionInfo.IntersectionPoint.getX(),
+		// minIntersectionInfo.IntersectionPoint.getY(),
+		// minIntersectionInfo.IntersectionPoint.getZ());
+		// // return new Color(minIntersectionInfo.Normal.getX(),
+		// // minIntersectionInfo.Normal.getY(),
+		// // minIntersectionInfo.Normal.getZ());
+		// } else {
+		// // Vector3 reflectedRayDirection = getReflectedDirection(
+		// // theRay.direction, minIntersectionInfo.Normal);
+		// // Vector3 reflectedRayOrigin =
+		// // minIntersectionInfo.IntersectionPoint
+		// // .add(reflectedRayDirection.multiply(0.001));
+		// // Ray reflectedRay = new Ray(reflectedRayOrigin,
+		// // reflectedRayDirection);
+		// // Color reflection = this.getColor(reflectedRay, depth + 1);
+		// // return reflection;
+		// }
 		Material objectMaterial = minObj.getMaterial();
 		// Add the ambient and emission terms immediately as they are not
 		// affected by light sources
@@ -78,7 +102,7 @@ public class RayTracer {
 					minIntersectionInfo.IntersectionPoint);
 			// shadowRayDirection.normalize();
 			Vector3 shadowRayOrigin = minIntersectionInfo.IntersectionPoint
-					.add(shadowRayDirection.multiply(0.0001));
+					.add(shadowRayDirection.multiply(0.001));
 			double distanceToLight = minIntersectionInfo.IntersectionPoint
 					.subtract(light.getCoordinates()).getLength();
 			Ray shadowRay = new Ray(shadowRayOrigin, shadowRayDirection);
@@ -91,33 +115,36 @@ public class RayTracer {
 
 		if (objectMaterial.getSpecular().isZero() == false) {
 			Vector3 reflectedLightTerm = getReflectedLightTerm(theRay,
-					minIntersectionInfo);
+					minIntersectionInfo, depth);
+			reflectedLightTerm = reflectedLightTerm
+					.multiplyByVector(objectMaterial.getSpecular());
 			colorProperties = colorProperties.add(reflectedLightTerm);
-			colorProperties = new Vector3(reflectedLightTerm);
 		}
 		Color result = new Color(colorProperties.getX(),
 				colorProperties.getY(), colorProperties.getZ());
-		// result = new Color(minIntersectionInfo.Normal.getX() * (-1),
-		// minIntersectionInfo.Normal.getY() * (-1),
-		// minIntersectionInfo.Normal.getZ() * (-1));
+		//Debug
+//		result = new Color(minIntersectionInfo.Normal.getX(),
+//				minIntersectionInfo.Normal.getY(),
+//				minIntersectionInfo.Normal.getZ());
 		return result;
 	}
 
 	private Vector3 getReflectedLightTerm(Ray originalRay,
-			IntersectionInfo intersectionInfo) {
-		Vector3 reflectedRayOrigin = intersectionInfo.IntersectionPoint;
-		
-		Vector3 result = new Vector3();
-		return reflectedRayOrigin;
+			IntersectionInfo intersectionInfo, int depth) {
+		Vector3 reflectedRayDirection = getReflectedDirection(
+				originalRay.direction, intersectionInfo.Normal);
+		Vector3 reflectedRayOrigin = intersectionInfo.IntersectionPoint
+				.add(reflectedRayDirection.multiply(0.001));
+		Ray reflectedRay = new Ray(reflectedRayOrigin, reflectedRayDirection);
+		Color reflection = this.getColor(reflectedRay, depth + 1);
+		Vector3 result = new Vector3(reflection);
+		return result;
 	}
 
 	private Vector3 getLightTerm(IntersectionInfo minIntersectionInfo,
 			Material objectMaterial, Light light, Vector3 rayDir) {
 		Color lightIntensity = light.getColor();
-		Vector3 lightIntensityVector = new Vector3(
-				lightIntensity.getRed() / 0xFF,
-				lightIntensity.getGreen() / 0xFF,
-				lightIntensity.getBlue() / 0xFF);
+		Vector3 lightIntensityVector = new Vector3(lightIntensity);
 
 		// If the light is a point, we have to add an attenuation factor
 		if (light.IsDirectional == false) {
@@ -133,6 +160,9 @@ public class RayTracer {
 		// and the light
 		Vector3 lightDirection = light.getCoordinates().subtract(
 				minIntersectionInfo.IntersectionPoint);
+		// debugX = lightDirection.getX();
+		// debugY = lightDirection.getY();
+		// debugZ = lightDirection.getZ();
 		lightDirection.normalize();
 		double lightDiffuseFactor = Math.max(
 				minIntersectionInfo.Normal.dotProduct(lightDirection), 0);
@@ -167,4 +197,12 @@ public class RayTracer {
 		return false;
 	}
 
+	private Vector3 getReflectedDirection(Vector3 incomingDirection,
+			Vector3 reflectionAxis) {
+		Vector3 result = new Vector3(incomingDirection);
+		Vector3 reflectionModifier = reflectionAxis.multiply(reflectionAxis
+				.dotProduct(incomingDirection) * 2);
+		result = result.subtract(reflectionModifier);
+		return result;
+	}
 }

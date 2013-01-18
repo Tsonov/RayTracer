@@ -189,7 +189,10 @@ public class SceneFileReader implements Closeable {
 			String sceneName = scanner.next();
 			theScene.setSceneName(sceneName);
 			break;
-
+		case "maxdepth":
+			//TODO
+			scanner.nextDouble();
+			break;
 		default:
 			throw new InvalidSceneFileException("Invalid command in file");
 		}
