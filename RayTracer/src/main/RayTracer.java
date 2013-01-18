@@ -11,7 +11,6 @@ import structures.Material;
 import structures.Ray;
 import structures.Vector3;
 import primitives.Primitive;
-import primitives.Sphere;
 
 public class RayTracer {
 	private final double constAttenuation;
@@ -52,7 +51,7 @@ public class RayTracer {
 	}
 
 	public Color getColor(Ray theRay, int depth) {
-		if (depth == MAX_DEPTH) {
+		if (depth >= MAX_DEPTH) {
 			return new Color(0, 0, 0);
 		}
 		double minDistance = Double.POSITIVE_INFINITY;
@@ -71,26 +70,6 @@ public class RayTracer {
 			return new Color(0, 0, 0);
 		}
 
-		// DEBUG
-		// if (depth == 1) {
-		// return new Color(minIntersectionInfo.IntersectionPoint.getX(),
-		// minIntersectionInfo.IntersectionPoint.getY(),
-		// minIntersectionInfo.IntersectionPoint.getZ());
-		// // return new Color(minIntersectionInfo.Normal.getX(),
-		// // minIntersectionInfo.Normal.getY(),
-		// // minIntersectionInfo.Normal.getZ());
-		// } else {
-		// // Vector3 reflectedRayDirection = getReflectedDirection(
-		// // theRay.direction, minIntersectionInfo.Normal);
-		// // Vector3 reflectedRayOrigin =
-		// // minIntersectionInfo.IntersectionPoint
-		// // .add(reflectedRayDirection.multiply(0.001));
-		// // Ray reflectedRay = new Ray(reflectedRayOrigin,
-		// // reflectedRayDirection);
-		// // Color reflection = this.getColor(reflectedRay, depth + 1);
-		// // return reflection;
-		// }
-
 		Material objectMaterial = minObj.getMaterial();
 		// Add the ambient and emission terms immediately as they are not
 		// affected by light sources
@@ -101,11 +80,16 @@ public class RayTracer {
 		for (Light light : this.lights) {
 			Vector3 shadowRayDirection = light.getCoordinates().subtract(
 					minIntersectionInfo.IntersectionPoint);
-			// shadowRayDirection.normalize();
+			shadowRayDirection.normalize();
 			Vector3 shadowRayOrigin = minIntersectionInfo.IntersectionPoint
 					.add(shadowRayDirection.multiply(0.001));
-			double distanceToLight = minIntersectionInfo.IntersectionPoint
-					.subtract(light.getCoordinates()).getLength();
+			double distanceToLight;
+			if (light.IsDirectional == false) {
+				distanceToLight = minIntersectionInfo.IntersectionPoint
+						.subtract(light.getCoordinates()).getLength();
+			} else {
+				distanceToLight = Double.POSITIVE_INFINITY;
+			}
 			Ray shadowRay = new Ray(shadowRayOrigin, shadowRayDirection);
 			if (isInShadow(shadowRay, distanceToLight) == false) {
 				Vector3 currentLightTerm = getLightTerm(minIntersectionInfo,
@@ -147,27 +131,27 @@ public class RayTracer {
 		Color lightIntensity = light.getColor();
 		Vector3 lightIntensityVector = new Vector3(lightIntensity);
 		Vector3 resultLightTerm = new Vector3(0, 0, 0);
-
 		Vector3 lightDirection = light.getCoordinates().subtract(
 				minIntersectionInfo.IntersectionPoint);
 		lightDirection.normalize();
-		
+		double cosineToLight = minIntersectionInfo.Normal
+				.dotProduct(lightDirection);
+		if(cosineToLight <= 0) {
+			return resultLightTerm;
+		}
+
 		// If the light is a point, we have to add an attenuation factor
 		if (light.IsDirectional == false) {
 			double distance = lightDirection.getLength();
 			double attenuationFactor = constAttenuation + linearAttenuation
 					* distance + quadraticAttenuation * distance * distance;
 			lightIntensityVector = lightIntensityVector
-					.multiply(1 / attenuationFactor);
+					.multiply(1.0 / attenuationFactor);
 		}
 
 		// Calculate the diffuse term based on the location of the object
 		// and the light
-		// Vector3 lightDirection = light.getCoordinates().subtract(
-		// minIntersectionInfo.IntersectionPoint);
-		// lightDirection.normalize();
-		double lightDiffuseFactor = Math.max(
-				minIntersectionInfo.Normal.dotProduct(lightDirection), 0);
+		double lightDiffuseFactor = Math.max(cosineToLight, 0);
 		Vector3 diffusionTerm = objectMaterial.getDiffuse().multiply(
 				lightDiffuseFactor);
 		resultLightTerm = resultLightTerm.add(diffusionTerm);
@@ -178,7 +162,8 @@ public class RayTracer {
 		halfAngle.normalize();
 		double specularFactor = Math.max(
 				halfAngle.dotProduct(minIntersectionInfo.Normal), 0);
-		if (Double.compare(specularFactor, 0) > 0) {
+		if (Double.compare(specularFactor, 0) > 0
+				&& Double.compare(lightDiffuseFactor, 0) > 0) {
 			specularFactor = Math.pow(specularFactor,
 					objectMaterial.getShininess());
 			Vector3 specularTerm = objectMaterial.getSpecular().multiply(

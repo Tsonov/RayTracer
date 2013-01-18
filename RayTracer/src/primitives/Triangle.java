@@ -30,10 +30,6 @@ public class Triangle extends Primitive {
 
 	@Override
 	public IntersectionInfo intersect(Ray theRay) {
-		// Ray transfRay = new Ray(transformVector(theRay.origin, 1,
-		// this.transformationToWorldCoordiantes.inverse()),
-		// transformVector(theRay.direction, 0,
-		// this.transformationToWorldCoordiantes.inverse()));
 		return intersectTrans(theRay);
 	}
 
@@ -42,7 +38,9 @@ public class Triangle extends Primitive {
 		double distance = -theRay.origin.subtract(vertices[0]).dotProduct(
 				normal)
 				/ theRay.direction.dotProduct(normal);
-		if (distance < 0) {
+
+		// If distance is negative, then the ray hits the triangle from behind
+		if (Double.compare(distance, 0) < 0) {
 			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}
 		Vector3 intersectionPoint = theRay.origin.add(theRay.direction
@@ -58,37 +56,6 @@ public class Triangle extends Primitive {
 		} else {
 			return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
 		}
-		// Vector3 normal = vertices[1].subtract(vertices[0]);
-		// normal = normal.crossProduct(vertices[2].subtract(vertices[0]));
-		// normal.normalize();
-		//
-		// double distance = -(theRay.origin.subtract(vertices[0])
-		// .dotProduct(normal));
-		// distance /= theRay.direction.dotProduct(normal);
-		// if (distance < 0) {
-		// return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
-		// }
-		//
-		// Vector3 intersectionPoint = theRay.origin.add(theRay.direction
-		// .multiply(distance));
-		// boolean firstCheck = vertices[1].subtract(vertices[0])
-		// .crossProduct(intersectionPoint.subtract(vertices[0]))
-		// .dotProduct(normal) >= 0;
-		// boolean secondCheck = vertices[2].subtract(vertices[1])
-		// .crossProduct(intersectionPoint).subtract(vertices[1])
-		// .dotProduct(normal) >= 0;
-		// boolean thirdCheck = vertices[0].subtract(vertices[2])
-		// .crossProduct(intersectionPoint.subtract(vertices[2]))
-		// .dotProduct(normal) >= 0;
-		// if (firstCheck && secondCheck && thirdCheck) {
-		// intersectionPoint = transformVector(intersectionPoint, 1,
-		// this.transformationToWorldCoordiantes);
-		// normal = transformVector(normal, 0,
-		// this.transformationToWorldCoordiantes.inverse().transpose());
-		// return new IntersectionInfo(distance, intersectionPoint, normal);
-		// } else {
-		// return new IntersectionInfo(Double.POSITIVE_INFINITY, null, null);
-		// }
 	}
 
 	private boolean isToTheLeftFromLine(int firstVertexIndex,
