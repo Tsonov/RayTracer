@@ -8,16 +8,35 @@ public class Light {
 	private Vector3 coordinates;
 	private Color color;
 
-	public Light(Vector3 coordinates, Color color, boolean isLightDirectional) {
+	/**
+	 * Creates a new light source
+	 * 
+	 * @param coordinates
+	 *            - the location of the light
+	 * @param intensity
+	 *            - the intensity of the light in RGB
+	 * @param isLightDirectional
+	 *            - the type of the light (directional or point)
+	 */
+	public Light(Vector3 coordinates, Color intensity,
+			boolean isLightDirectional) {
 		this.coordinates = coordinates;
-		this.color = color;
+		this.color = intensity;
 		this.IsDirectional = isLightDirectional;
 	}
 
+	/**
+	 * 
+	 * @return The intensity of this light source
+	 */
 	public Color getColor() {
 		return this.color;
 	}
 
+	/**
+	 * 
+	 * @return The location of the light source or the direction for directional lights
+	 */
 	public Vector3 getCoordinates() {
 		return this.coordinates;
 	}

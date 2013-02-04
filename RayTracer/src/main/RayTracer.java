@@ -2,9 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import lights.Light;
-
 import structures.Color;
 import structures.IntersectionInfo;
 import structures.Material;
@@ -16,23 +14,20 @@ public class RayTracer {
 	private final double constAttenuation;
 	private final double linearAttenuation;
 	private final double quadraticAttenuation;
-	private final int MAX_DEPTH = 5;
+	private final int MAX_DEPTH;
 	private ArrayList<Primitive> objects;
 	private ArrayList<Light> lights;
 
-	// for debug
-	// private double debugX = 150;
-	// private double debugY = 200;
-	// private double debugZ = 90;
-
-	public RayTracer() {
-		this.objects = new ArrayList<Primitive>();
-		this.lights = new ArrayList<Light>();
-		this.constAttenuation = 1;
-		this.linearAttenuation = 0;
-		this.quadraticAttenuation = 0;
-	}
-
+	/**
+	 * Creates a new RayTracer to that traces rays into a virtual world
+	 * 
+	 * @param objects
+	 *            - the objects in the world
+	 * @param lights
+	 *            - the lights in the world
+	 * @param sceneAttenuation
+	 *            - the attenuation constants of the world
+	 */
 	public RayTracer(Collection<Primitive> objects, Collection<Light> lights,
 			Vector3 sceneAttenuation) {
 		this.objects = new ArrayList<Primitive>(objects);
@@ -40,17 +35,44 @@ public class RayTracer {
 		this.constAttenuation = sceneAttenuation.getX();
 		this.linearAttenuation = sceneAttenuation.getY();
 		this.quadraticAttenuation = sceneAttenuation.getZ();
+		MAX_DEPTH = 5;
 	}
 
-	public void addWorldObject(Primitive object) {
-		this.objects.add(object);
+	/**
+	 * Creates a new RayTracer to that traces rays into a virtual world
+	 * 
+	 * @param objects
+	 *            - the objects in the world
+	 * @param lights
+	 *            - the lights in the world
+	 * @param sceneAttenuation
+	 *            - the attenuation constants of the world
+	 * @param maxDepth
+	 *            - the max depth when the tracer stops tracing reflected rays
+	 */
+	public RayTracer(Collection<Primitive> objects, Collection<Light> lights,
+			Vector3 sceneAttenuation, int maxDepth) {
+		this.objects = new ArrayList<Primitive>(objects);
+		this.lights = new ArrayList<Light>(lights);
+		this.constAttenuation = sceneAttenuation.getX();
+		this.linearAttenuation = sceneAttenuation.getY();
+		this.quadraticAttenuation = sceneAttenuation.getZ();
+		this.MAX_DEPTH = maxDepth;
 	}
 
+	/**
+	 * Trace the given ray and calculate the color of it's intersection with the
+	 * world
+	 * 
+	 * @param theRay
+	 *            - the ray to trace
+	 * @return The color for the intersection with the world
+	 */
 	public Color getColor(Ray theRay) {
 		return this.getColor(theRay, 0);
 	}
 
-	public Color getColor(Ray theRay, int depth) {
+	private Color getColor(Ray theRay, int depth) {
 		if (depth >= MAX_DEPTH) {
 			return new Color(0, 0, 0);
 		}
@@ -66,6 +88,7 @@ public class RayTracer {
 				minIntersectionInfo = intersectInfo;
 			}
 		}
+
 		if (minObj == null || minIntersectionInfo == null) {
 			return new Color(0, 0, 0);
 		}
@@ -107,10 +130,6 @@ public class RayTracer {
 		}
 		Color result = new Color(colorProperties.getX(),
 				colorProperties.getY(), colorProperties.getZ());
-		// Debug
-		// result = new Color(minIntersectionInfo.Normal.getX(),
-		// minIntersectionInfo.Normal.getY(),
-		// minIntersectionInfo.Normal.getZ());
 		return result;
 	}
 
@@ -136,7 +155,7 @@ public class RayTracer {
 		lightDirection.normalize();
 		double cosineToLight = minIntersectionInfo.Normal
 				.dotProduct(lightDirection);
-		if(cosineToLight <= 0) {
+		if (cosineToLight <= 0) {
 			return resultLightTerm;
 		}
 

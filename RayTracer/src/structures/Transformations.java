@@ -4,6 +4,24 @@ import Jama.Matrix;
 
 public final class Transformations {
 
+	/**
+	 * Gets the identity 4x4 matrix
+	 * 
+	 * @return The identity matrix
+	 */
+	public static Matrix getIdentityMatrix() {
+		double[][] identityArray = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 },
+				{ 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
+		return new Matrix(identityArray);
+	}
+
+	/**
+	 * Gets a transformation 4x4 matrix for a translation by a vector
+	 * 
+	 * @param translateVector
+	 *            - the vector of translation
+	 * @return A transformation matrix corresponding to the translation
+	 */
 	public static Matrix getTranslateMatrix(Vector3 translateVector) {
 		double[][] translateArray = { { 1, 0, 0, translateVector.getX() },
 				{ 0, 1, 0, translateVector.getY() },
@@ -12,6 +30,13 @@ public final class Transformations {
 		return result;
 	}
 
+	/**
+	 * Gets a transformation 4x4 matrix for a scale operation
+	 * 
+	 * @param scaleVector
+	 *            - the x, y, z scaling factors
+	 * @return A transformation matrix corresponding to the scale operation
+	 */
 	public static Matrix getScaleMatrix(Vector3 scaleVector) {
 		double[][] array = { { scaleVector.getX(), 0, 0, 0 },
 				{ 0, scaleVector.getY(), 0, 0 },
@@ -20,6 +45,15 @@ public final class Transformations {
 		return result;
 	}
 
+	/**
+	 * Gets a transformation 4x4 matrix for a rotation around an axis
+	 * 
+	 * @param degrees
+	 *            - the angle of rotation
+	 * @param axis
+	 *            - the axis for rotation
+	 * @return A transformation matrix corresponding to the rotation
+	 */
 	public static Matrix getRotationMatrix(double degrees, Vector3 axis) {
 		double radians = degrees * Math.PI / 180;
 		axis.normalize();
@@ -28,8 +62,7 @@ public final class Transformations {
 		double z = axis.getZ();
 		double cos = Math.cos(radians);
 
-		double[][] matrixArray = { { cos, 0, 0 }, { 0, cos, 0 },
-				{ 0, 0, cos } };
+		double[][] matrixArray = { { cos, 0, 0 }, { 0, cos, 0 }, { 0, 0, cos } };
 		Matrix rotationMatrix = new Matrix(matrixArray);
 
 		double[][] componentAlongAxisArray = { { x * x, x * y, x * z },

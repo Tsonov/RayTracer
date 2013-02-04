@@ -1,25 +1,31 @@
 package structures;
 
 public class Color {
-	private final int PURE_RED = 0xFF0000;
-	private final int PURE_GREEN = 0xFF00;
-	private final int PURE_BLUE = 0xFF;
-	private final int WHITE = 0xFFFFFF;
-	private final int BLACK = 0x0;
 	private final int red;
 	private final int green;
 	private final int blue;
 
+	/**
+	 * Constructs an RGB color
+	 * 
+	 * @param red
+	 * @param green
+	 * @param blue
+	 */
 	public Color(int red, int green, int blue) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
 	}
 
-	// public Color(Vector3 vector) {
-	//
-	// }
-
+	/**
+	 * Construcs an RGB color by fraction values. Color is dumped, meaning that
+	 * it's normalized to BLACK or WHITE for fractions outside the [0, 1] range.
+	 * 
+	 * @param redPercent
+	 * @param greenPercent
+	 * @param bluePercent
+	 */
 	public Color(double redPercent, double greenPercent, double bluePercent) {
 		if (Double.compare(redPercent, 1) > 0)
 			redPercent = 1;
@@ -38,6 +44,11 @@ public class Color {
 		this.blue = (int) (bluePercent * 0xFF);
 	}
 
+	/**
+	 * Calculate the RGB sum value of this color
+	 * 
+	 * @return The RGB sum value
+	 */
 	public int getRGB() {
 		int result = getBlue();
 		result += getGreen() << 8;
@@ -45,13 +56,26 @@ public class Color {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return The red term of this color
+	 */
 	public int getRed() {
 		return red;
 	}
 
+	/**
+	 * 
+	 * @return The green term of this color
+	 */
 	public int getGreen() {
 		return green;
 	}
+
+	/**
+	 * 
+	 * @return The blue term of this color
+	 */
 
 	public int getBlue() {
 		return blue;

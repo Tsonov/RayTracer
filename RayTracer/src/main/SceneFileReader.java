@@ -23,18 +23,31 @@ public class SceneFileReader implements Closeable {
 	private Material currentMaterialProperties;
 	private Stack<Matrix> transformationStack;
 
+	/**
+	 * Create a new Scene from a given .rayscene file
+	 * 
+	 * @param filePath
+	 *            - the path to the file
+	 * @throws IOException
+	 *             - when the file is invalid
+	 */
 	public SceneFileReader(String filePath) throws IOException {
 		Path fileLocation = Paths.get(filePath);
 		scanner = new Scanner(fileLocation);
 	}
 
-	public Scene getSceneInfo() throws Exception {
+	/**
+	 * Generate the scene from the loaded .rayscene file
+	 * 
+	 * @return The scene defined in the file
+	 * @throws InvalidSceneFileException
+	 *             - when the scene file is corrupted
+	 */
+	public Scene getSceneInfo() throws InvalidSceneFileException {
 		Scene result = new Scene();
 		currentMaterialProperties = new Material();
 		this.transformationStack = new Stack<>();
-		double[][] identityArray = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 },
-				{ 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
-		Matrix identity = new Matrix(identityArray);
+		Matrix identity = Transformations.getIdentityMatrix();
 		transformationStack.push(identity);
 
 		while (scanner.hasNext()) {
@@ -190,11 +203,12 @@ public class SceneFileReader implements Closeable {
 			theScene.setSceneName(sceneName);
 			break;
 		case "maxdepth":
-			//TODO
-			scanner.nextDouble();
+			int maxDepth = scanner.nextInt();
+			theScene.setMaxDepth(maxDepth);
 			break;
 		default:
-			throw new InvalidSceneFileException("Invalid command in file");
+			throw new InvalidSceneFileException("Invalid command in file: "
+					+ command);
 		}
 	}
 

@@ -4,29 +4,41 @@ import structures.*;
 import Jama.Matrix;
 
 public class Sphere extends Primitive {
+
+	private final Matrix inverseTransform;
+	private final Matrix normalTransform;
 	private double radius;
 	private Vector3 center;
 
+	/**
+	 * Creates a new sphere
+	 * 
+	 * @param theCenter
+	 *            - the coordinates of the sphere's center
+	 * @param radius
+	 *            - the radius of the sphere
+	 * @param transformation
+	 *            - the transformation to apply to the sphere
+	 */
 	public Sphere(Vector3 theCenter, double radius, Matrix transformation) {
 		super(transformation);
 		this.radius = radius;
 		this.center = theCenter;
-		this.boundingBox = generateBoundingBox();
+		this.inverseTransform = this.transformationToWorldCoordiantes.inverse();
+		this.normalTransform = inverseTransform.transpose();
 	}
 
 	@Override
 	public IntersectionInfo intersect(Ray theRay) {
-		Matrix inverseTransformation = this.transformationToWorldCoordiantes
-				.inverse();
 		Vector3 transfOrigin = transformVector(theRay.origin, 1,
-				inverseTransformation);
+				inverseTransform);
 		Vector3 transfDirection = transformVector(theRay.direction, 0,
-				inverseTransformation);
+				inverseTransform);
 		Ray transformedRay = new Ray(transfOrigin, transfDirection);
 		return intersectTrans(transformedRay);
 	}
 
-	public IntersectionInfo intersectTrans(Ray theRay) {
+	private IntersectionInfo intersectTrans(Ray theRay) {
 		Vector3 vecToCenter = theRay.origin.subtract(this.center);
 		// Form a quadratic parametric equation a*x^2+b*x+c=0 and solve for the
 		// distance along the direction
@@ -69,53 +81,9 @@ public class Sphere extends Primitive {
 
 		intersectionPoint = transformVector(intersectionPoint, 1,
 				this.transformationToWorldCoordiantes);
-		Matrix transformationForNormal = this.transformationToWorldCoordiantes
-				.inverse().transpose();
-		normal = transformVector(normal, 0, transformationForNormal);
+		normal = transformVector(normal, 0, this.normalTransform);
 		normal.normalize();
 
 		return new IntersectionInfo(resultDistance, intersectionPoint, normal);
-	}
-
-	protected Box generateBoundingBox() {
-		Vector3[] boundings = new Vector3[8];
-		boundings[0] = transformVector(
-				center.add(new Vector3(radius, radius, radius)), 1,
-				transformationToWorldCoordiantes);
-		boundings[1] = transformVector(
-				center.add(new Vector3(radius, radius, -radius)), 1,
-				transformationToWorldCoordiantes);
-		boundings[2] = transformVector(
-				center.add(new Vector3(radius, -radius, radius)), 1,
-				transformationToWorldCoordiantes);
-		boundings[3] = transformVector(
-				center.add(new Vector3(radius, -radius, -radius)), 1,
-				transformationToWorldCoordiantes);
-		boundings[4] = transformVector(
-				center.add(new Vector3(-radius, radius, radius)), 1,
-				transformationToWorldCoordiantes);
-		boundings[5] = transformVector(
-				center.add(new Vector3(-radius, radius, -radius)), 1,
-				transformationToWorldCoordiantes);
-		boundings[6] = transformVector(
-				center.add(new Vector3(-radius, -radius, radius)), 1,
-				transformationToWorldCoordiantes);
-		boundings[7] = transformVector(
-				center.add(new Vector3(-radius, -radius, -radius)), 1,
-				transformationToWorldCoordiantes);
-
-		Vector3 min = boundings[0];
-		Vector3 max = boundings[1];
-		for (int axis = 0; axis < 3; axis++) {
-			for (int boundingsIndex = 0; boundingsIndex < 8; boundingsIndex++) {
-				double minVal = Math.min(min.getCoordinate(axis),
-						boundings[boundingsIndex].getCoordinate(axis));
-				double maxVal = Math.max(max.getCoordinate(axis),
-						boundings[boundingsIndex].getCoordinate(axis));
-				min.setCoordinate(axis, minVal);
-				max.setCoordinate(axis, maxVal);
-			}
-		}
-		return null;
 	}
 }

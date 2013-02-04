@@ -1,41 +1,67 @@
 package primitives;
 
-import structures.Box;
 import structures.Material;
 import structures.Vector3;
 import Jama.Matrix;
 
 public abstract class Primitive implements Intersectable {
 	protected final Matrix transformationToWorldCoordiantes;
-	protected Box boundingBox;
 	private Material material;
 
+	/**
+	 * Sets the tranformation for this primitive
+	 * 
+	 * @param transformation
+	 *            - the transformation for this primitive
+	 */
 	protected Primitive(Matrix transformation) {
 		this.transformationToWorldCoordiantes = transformation;
 	}
 
-	protected Primitive(Box boundingBox) {
-		this.transformationToWorldCoordiantes = null;
-		this.boundingBox = boundingBox;
-	}
-	
+	/**
+	 * Sets the material properties for this primitive
+	 * 
+	 * @param material
+	 */
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
 
+	/**
+	 * Returns the material properties of this primitive
+	 * 
+	 * @return The material properties
+	 */
 	public Material getMaterial() {
 		return this.material;
 	}
 
+	/**
+	 * Returns the affine transformation for this primitive
+	 * 
+	 * @return The matrix of the transformation
+	 */
 	public Matrix getTransformation() {
 		return this.transformationToWorldCoordiantes;
 	}
-	
-	public Box getBoundingBox() {
-		return this.boundingBox;
-	}
 
-	public static Vector3 transformVector(Vector3 vector,
+	/**
+	 * Transforms a 3-dimensional vector into homogeneous coordinates, applies a
+	 * transformation to them. Does not dehomogenize the vector, but drops the
+	 * homogeneous coordinate instead.
+	 * 
+	 * @param vector
+	 *            - the vector to transform
+	 * @param homogeneousCoord
+	 *            - the homogeneous coordinate to apply to the vector(1 for
+	 *            points, 0 for directional vectors)
+	 * @param transformation
+	 *            - the transformation to apply to the vector, must be a 4x4
+	 *            matrix
+	 * @return
+	 * 
+	 */
+	protected static Vector3 transformVector(Vector3 vector,
 			double homogeneousCoord, Matrix transformation) {
 		double[][] homogenOriginArray = { { vector.getX() }, { vector.getY() },
 				{ vector.getZ() }, { homogeneousCoord } };

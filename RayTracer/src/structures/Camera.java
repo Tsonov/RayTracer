@@ -6,19 +6,30 @@ public final class Camera {
 	private final Vector3 v;
 	private final Vector3 w;
 	private final double fieldViewY;
-	//private final double fieldViewX;
 	private final double widthViewScreen;
 	private final double heightViewScreen;
 
+	/**
+	 * Construct a new camera that can send view rays
+	 * 
+	 * @param eye
+	 *            - the eye location
+	 * @param center
+	 *            - where the eye is looking at
+	 * @param up
+	 *            - the up vector for the eye's orientation
+	 * @param fieldViewY
+	 *            - the field of view in the Y (height) direction
+	 * @param width
+	 *            - the width of the View Screen
+	 * @param height
+	 *            - the height of the View Screen
+	 */
 	public Camera(Vector3 eye, Vector3 center, Vector3 up, double fieldViewY,
 			int width, int height) {
 		this.eye = eye;
 		this.fieldViewY = fieldViewY * Math.PI / 180; // store in radians for
 														// math functions
-		// this.fieldViewX = this.fieldViewY * ((double)width / height);
-		//double aspect = ((double) width) / height;
-		//this.fieldViewX = Math.tan(fieldViewY) * aspect;
-		//this.fieldViewX = 2.0 * Math.atan(aspect * Math.tan(fieldViewY / 2));
 		// Construct the camera coordinate system here
 		Vector3 w = eye.subtract(center);
 		w.normalize();
@@ -34,6 +45,13 @@ public final class Camera {
 		this.heightViewScreen = height;
 	}
 
+	/**
+	 * Starts a Ray from this camera for a screen sample
+	 * 
+	 * @param sample
+	 *            - the sample from the view screen
+	 * @return The ray from the camera to the sample
+	 */
 	public Ray getRay(ViewScreenSample sample) {
 		Vector3 direction = new Vector3();
 		double alphaCoordinate = getColumnCoordinate(sample);
@@ -47,7 +65,7 @@ public final class Camera {
 		Ray result = new Ray(eye, direction);
 		return result;
 	}
-
+	
 	private Vector3 getProperUp(Vector3 up, Vector3 viewAxisVector) {
 		Vector3 planeVec = up.crossProduct(viewAxisVector);
 		Vector3 orthogonalUp = viewAxisVector.crossProduct(planeVec);
@@ -56,7 +74,7 @@ public final class Camera {
 	}
 
 	private double getColumnCoordinate(ViewScreenSample sample) {
-		//double result = Math.tan(fieldViewX / 2);
+		// double result = Math.tan(fieldViewX / 2);
 		double result = Math.tan(fieldViewY / 2);
 		result *= (sample.getColumn() - (widthViewScreen / 2))
 				/ (heightViewScreen / 2);

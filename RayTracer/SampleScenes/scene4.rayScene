@@ -1,0 +1,58 @@
+size 640 480
+
+camera 0 1.5 3 0 0 -1 0 1 0 30
+
+#spheres
+
+diffuse 0.3 0.8 0.5
+specular 0.3 0.2 0.1
+ambient 0.1 0.1 0.1
+shininess 45
+sphere -1 0 -2 0.5 
+
+diffuse 0.9 0 0
+specular 0.4 0.4 0.4
+ambient 0.1 0.1 0.1
+shininess 45
+sphere 0 0 -2 0.5 
+
+diffuse 0.1 0.2 0.8
+specular 0.9 0.5 0.2
+ambient 0.1 0.1 0.1
+shininess 45
+sphere 1 0 -2 0.5
+
+diffuse 1 0.2 0.5
+specular 0.1 0.3 0.4
+ambient 0.1 0.1 0.1
+shininess 45
+sphere -0.5 0 -3 0.5 
+
+diffuse 1 1 0.2
+specular 0.5 0.5 0.3
+ambient 0.1 0.1 0.1
+shininess 45
+sphere 0.5 0 -3 0.5 
+
+diffuse 0.23 0.34 0.23
+specular 0.4 0.4 0.4
+ambient 0.1 0.1 0.1
+shininess 45
+sphere 0 0 -4 0.5 
+
+#triangle
+maxverts 3
+
+vertex 0 -0.6 8
+vertex -5 -0.6 -6 
+vertex 5 -0.6 -6
+
+diffuse 0.1 0.8 0.2
+specular 0.2 0.2 0.3
+ambient 0 0.1 0
+shininess 45
+tri 0 1 2  
+
+point 0 5 -8 0.5 0.5 0.5
+point -4.33 5 2.5 0.5 0.5 0.5
+point 4.33 5 2.5 0.5 0.5 0.5

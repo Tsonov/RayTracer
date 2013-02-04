@@ -1,6 +1,5 @@
 package primitives;
 
-import structures.Box;
 import structures.IntersectionInfo;
 import structures.Ray;
 import Jama.Matrix;
@@ -10,11 +9,31 @@ public class Triangle extends Primitive {
 	private Vector3[] vertices = new Vector3[3];
 	private Vector3 normal;
 
+	/**
+	 * Create a triangle from three vertices in clock-wise direction.
+	 * 
+	 * @param first
+	 *            - the first vertex
+	 * @param second
+	 *            - the second vertex
+	 * @param third
+	 *            - the third vertex
+	 * @param transformation
+	 *            - the transformation for this triangle
+	 */
 	public Triangle(Vector3 first, Vector3 second, Vector3 third,
 			Matrix transformation) {
 		this(new Vector3[] { first, second, third }, transformation);
 	}
 
+	/**
+	 * Create a triangle from three vertices in clock-wise direction.
+	 * 
+	 * @param vertices
+	 *            - the array with the vertices
+	 * @param transformation
+	 *            - the transformation for this triangle
+	 */
 	public Triangle(Vector3[] vertices, Matrix transformation) {
 		super(transformation);
 		if (vertices.length != 3) {
@@ -27,7 +46,6 @@ public class Triangle extends Primitive {
 					this.transformationToWorldCoordiantes);
 		}
 		computeNormal();
-		this.boundingBox = generateBoundingBox();
 	}
 
 	@Override
@@ -77,21 +95,5 @@ public class Triangle extends Primitive {
 		// this.normal = transformVector(normal, 0,
 		// this.transformationToWorldCoordiantes.inverse().transpose());
 		this.normal.normalize();
-	}
-
-	private Box generateBoundingBox() {
-		Vector3 min = new Vector3();
-		Vector3 max = new Vector3();
-		for (int axis = 0; axis < 3; axis++) {
-			double minValue = Math.min(
-					vertices[0].getCoordinate(axis),
-					Math.min(vertices[1].getCoordinate(axis),
-							vertices[2].getCoordinate(axis)));
-			double maxValue = Math.max(
-					vertices[0].getCoordinate(axis),
-					Math.max(vertices[1].getCoordinate(axis),
-							vertices[2].getCoordinate(axis)));
-		}
-		return new Box(min, max);
 	}
 }
